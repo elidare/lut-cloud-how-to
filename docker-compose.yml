@@ -25,18 +25,12 @@ services:
         image: project-backend:dev # This is the image we have built. If missing, check build_docker_images.sh
         volumes:
             - ./backend:/usr/src/app # We want to mount our local backend folder to the container
-        # develop:  # https://github.com/oven-sh/bun/issues/5841#issuecomment-1985245340
-        #   watch:
-        #     - action: sync
-        #       path: ./backend
-        #       target: /usr/src/app
-        #     - action: rebuild
-        #       path: ./package.json
         environment:
             - POSTGRES_URL=postgres://user:password@postgres:5432/projectdb # This is the database URL
+            - JWT_SECRET=secret
         networks:
             - cloud_project # Note the network is the same as for traefik! Otherwise this won't work!
-        #command: bun run dev # This is the command we want to run. We are now overriding the default command.
+        command: bun run dev # This is the command we want to run. We are now overriding the default command.
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.backend.rule=Host(`backend.localhost`)" # This is the backend service URL
@@ -80,6 +74,22 @@ services:
             - "traefik.http.routers.ui.entrypoints=websecure"
             - "traefik.http.routers.ui.tls=true"
             - "traefik.http.services.ui.loadbalancer.server.port=5173"
+    auth:
+        image: project-auth:dev # This is the image we have built. If missing, check build_images.sh
+        volumes:
+            - ./auth:/usr/src/app # We want to mount our local auth folder to the container
+        networks:
+            - cloud_project # Note the network is the same as for traefik! Otherwise this won't work!
+        command: bun dev # This is the command we want to run. We are now overriding the default command.
+        environment:
+            - PORT=3001 # We want to set the port in the environment variables
+            - JWT_SECRET=secret # We want to set the JWT_SECRET in the environment variables
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.auth.rule=Host(`auth.localhost`)" # This is the backend service URL
+            - "traefik.http.routers.auth.entrypoints=websecure"
+            - "traefik.http.routers.auth.tls=true"
+            - "traefik.http.services.auth.loadbalancer.server.port=3001"
 
 networks:
     cloud_project:
