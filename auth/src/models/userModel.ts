@@ -8,7 +8,8 @@ const defaultPermissions = [
     "read:data",
     "create:data",
     "write:data",
-    "delete:data"
+    "delete:data",
+    "recommend:read"
 ];
 
 /**

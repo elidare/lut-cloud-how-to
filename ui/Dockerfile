@@ -1,4 +1,4 @@
-FROM oven/bun:1.2.3
+FROM oven/bun:1.2.5
 WORKDIR /usr/src/app
 COPY package*.json .
 RUN bun install
