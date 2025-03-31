@@ -9,7 +9,6 @@ const app = new Elysia()
     .use(swagger())
     .use(cors())
     .get("/", () => "Hello Elysia")
-    .get("/hello", "Do you miss me?") // ?? undefined is not an object (evaluating 'c.set')
     .use(protectedRouter)
     .listen(PORT);
 
