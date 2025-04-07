@@ -4,5 +4,7 @@ RUN rm /etc/nginx/conf.d/default.conf
 COPY init-prod.sh /etc/nginx/init-prod.sh
 COPY nginx-prod.conf /etc/nginx/nginx-prod.conf
 
+RUN chmod +x /etc/nginx/init-prod.sh
+
 # Add the built UI codes here as well
 COPY --from=project-ui:prod /usr/src/app/dist /var/www/app
