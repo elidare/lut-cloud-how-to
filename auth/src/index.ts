@@ -4,12 +4,20 @@ import { Elysia } from "elysia";
 import { signupRouter } from "./routes/signupRouter";
 import { loginRouter } from "./routes/loginRouter";
 import { protectedRouter } from "./routes/protectedRouter";
+import { register } from "./metrics";
 
 const PORT = process.env.PORT || 3001;
 
 const app = new Elysia()
     .use(swagger())
     .use(cors())
+    .get("/metrics", async () => {
+        return new Response(await register.metrics(), {
+            headers: {
+                "Content-Type": register.contentType
+            }
+        });
+    })
     .get("/", () => "Hello from auth!")
     .use(signupRouter)
     .use(loginRouter)
